@@ -1,114 +1,122 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React, {Component} from 'react';
 
-import React from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
   View,
+  StyleSheet,
   Text,
-  StatusBar,
+  TextInput,
+  TouchableHighlight,
+  Button,
+  FlatList,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const App: () => React$Node = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
-
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+// import { Container } from './styles';
+const appStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    margin: 16,
+    paddingTop: 22,
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  buttonsStyle: {
+    backgroundColor: '#2CC990',
+    margin: 4,
+    padding: 10,
+    borderRadius: 20,
+    width: '100%',
+    alignItems: 'center',
   },
-  body: {
-    backgroundColor: Colors.white,
+  flatListStyle: {
+    width: '100%',
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  flatListItemContainerStyle: {
+    width: '100%',
+    flex: 1,
+    flexDirection: 'row',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
+  item: {
+    padding: 10,
     fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+    height: 44,
   },
 });
 
-export default App;
+export default class DeliveryApp extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      text: '',
+      itens: [
+        {key: 'Devin'},
+        {key: 'Dan'},
+        {key: 'Dominic'},
+        {key: 'Jackson'},
+        {key: 'James'},
+        {key: 'Joel'},
+        {key: 'John'},
+        {key: 'Jillian'},
+        {key: 'Jimmy'},
+        {key: 'Julie'},
+      ],
+    };
+  }
+
+  componentDidMount() {
+    let state = this.state;
+    state.count = this.state.itens.length;
+    this.setState(state);
+  }
+
+  addToItens = () => {
+    let state = this.state;
+    state.itens.push({key: this.state.text});
+    state.count = this.state.itens.length;
+    this.setState(state);
+  };
+
+  onItemRemove = item => {
+    let state = this.state;
+    let index = state.itens.indexOf(item);
+    state.itens.splice(index, 1);
+    state.count = this.state.itens.length;
+    this.setState(state);
+  };
+
+  render() {
+    return (
+      <View style={appStyles.container}>
+        <TextInput
+          style={{width: '100%', height: 40}}
+          placeholder="Type here to translate!"
+          onChangeText={text => this.setState({text})}
+          value={this.state.text}
+        />
+        <Text>
+          You clicked {this.state.count} times | {this.state.text}{' '}
+        </Text>
+        <TouchableHighlight
+          style={appStyles.buttonsStyle}
+          onPress={this.addToItens}>
+          <Text>Click Here</Text>
+        </TouchableHighlight>
+        <FlatList
+          style={appStyles.flatListStyle}
+          data={this.state.itens}
+          renderItem={({item}) => (
+            <View style={appStyles.flatListItemContainerStyle}>
+              <Text style={appStyles.item}>{item.key}</Text>
+              <Button
+                title="X"
+                onPress={() => {
+                  this.onItemRemove(item);
+                }}
+              />
+            </View>
+          )}
+        />
+      </View>
+    );
+  }
+}
