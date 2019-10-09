@@ -35,9 +35,12 @@ const appStyles = StyleSheet.create({
     width: '100%',
     flex: 1,
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 4,
   },
-  item: {
-    padding: 10,
+  flatListItemElementStyle: {
+    paddingTop: 10,
     fontSize: 18,
     height: 44,
   },
@@ -88,7 +91,7 @@ export default class DeliveryApp extends Component {
     return (
       <View style={appStyles.container}>
         <TextInput
-          style={{width: '100%', height: 40}}
+          style={{width: '100%', height: 45}}
           placeholder="Type here to translate!"
           onChangeText={text => this.setState({text})}
           value={this.state.text}
@@ -106,9 +109,10 @@ export default class DeliveryApp extends Component {
           data={this.state.itens}
           renderItem={({item}) => (
             <View style={appStyles.flatListItemContainerStyle}>
-              <Text style={appStyles.item}>{item.key}</Text>
+              <Text style={appStyles.flatListItemElementStyle}>{item.key}</Text>
               <Button
                 title="X"
+                color="red"
                 onPress={() => {
                   this.onItemRemove(item);
                 }}
