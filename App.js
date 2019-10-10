@@ -1,4 +1,4 @@
-import React, {Component, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {
   View,
@@ -32,7 +32,6 @@ export default function DeliveryApp() {
   }, [itens.length]);
 
   const addToItens = () => {
-    console.log(itens);
     if (itens.some(o => o.key === text)) {
       alert('Key Exist...');
       return;
@@ -43,9 +42,7 @@ export default function DeliveryApp() {
   };
 
   const onItemRemove = item => {
-    let index = itens.indexOf(item);
-    itens.splice(index, 1);
-    setItens(itens);
+    setItens(itens.filter(o => o !== item));
     setCount(itens.length);
   };
 
