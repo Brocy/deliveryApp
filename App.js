@@ -1,8 +1,7 @@
-import React, {Component} from 'react';
+import React, {Component, useState, useEffect} from 'react';
 
 import {
   View,
-  StyleSheet,
   Text,
   TextInput,
   TouchableHighlight,
@@ -10,117 +9,80 @@ import {
   FlatList,
 } from 'react-native';
 
-// import { Container } from './styles';
-const appStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    margin: 16,
-    paddingTop: 22,
-  },
-  buttonsStyle: {
-    backgroundColor: '#2CC990',
-    margin: 4,
-    padding: 10,
-    borderRadius: 20,
-    width: '100%',
-    alignItems: 'center',
-  },
-  flatListStyle: {
-    width: '100%',
-  },
-  flatListItemContainerStyle: {
-    width: '100%',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 4,
-  },
-  flatListItemElementStyle: {
-    paddingTop: 10,
-    fontSize: 18,
-    height: 44,
-  },
-});
+import AppStyles from './src/style/style.js';
 
-export default class DeliveryApp extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      text: '',
-      itens: [
-        {key: 'Devin'},
-        {key: 'Dan'},
-        {key: 'Dominic'},
-        {key: 'Jackson'},
-        {key: 'James'},
-        {key: 'Joel'},
-        {key: 'John'},
-        {key: 'Jillian'},
-        {key: 'Jimmy'},
-        {key: 'Julie'},
-      ],
-    };
-  }
+export default function DeliveryApp() {
+  const [count, setCount] = useState(0);
+  const [text, setText] = useState('');
+  const [itens, setItens] = useState([
+    {key: 'Devin'},
+    {key: 'Dan'},
+    {key: 'Dominic'},
+    {key: 'Jackson'},
+    {key: 'James'},
+    {key: 'Joel'},
+    {key: 'John'},
+    {key: 'Jillian'},
+    {key: 'Jimmy'},
+    {key: 'Julie'},
+  ]);
 
-  componentDidMount() {
-    let state = this.state;
-    state.count = this.state.itens.length;
-    this.setState(state);
-  }
+  useEffect(() => {
+    setCount(itens.length);
+  }, [itens.length]);
 
-  addToItens = () => {
-    let state = this.state;
-    state.itens.push({key: this.state.text});
-    state.count = this.state.itens.length;
-    this.setState(state);
+  const addToItens = () => {
+    console.log(itens);
+    if (itens.some(o => o.key === text)) {
+      alert('Key Exist...');
+      return;
+    } else {
+      setItens([...itens, {key: text}]);
+      setCount(itens.length);
+    }
   };
 
-  onItemRemove = item => {
-    let state = this.state;
-    let index = state.itens.indexOf(item);
-    state.itens.splice(index, 1);
-    state.count = this.state.itens.length;
-    this.setState(state);
+  const onItemRemove = item => {
+    let index = itens.indexOf(item);
+    itens.splice(index, 1);
+    setItens(itens);
+    setCount(itens.length);
   };
 
-  render() {
-    return (
-      <View style={appStyles.container}>
-        <TextInput
-          style={{width: '100%', height: 45}}
-          placeholder="Type here to translate!"
-          onChangeText={text => this.setState({text})}
-          value={this.state.text}
-        />
-        <Text>
-          You clicked {this.state.count} times | {this.state.text}{' '}
-        </Text>
-        <TouchableHighlight
-          style={appStyles.buttonsStyle}
-          onPress={this.addToItens}>
-          <Text>Click Here</Text>
-        </TouchableHighlight>
-        <FlatList
-          style={appStyles.flatListStyle}
-          data={this.state.itens}
-          renderItem={({item}) => (
-            <View style={appStyles.flatListItemContainerStyle}>
-              <Text style={appStyles.flatListItemElementStyle}>{item.key}</Text>
-              <Button
-                title="X"
-                color="red"
-                onPress={() => {
-                  this.onItemRemove(item);
-                }}
-              />
-            </View>
-          )}
-        />
-      </View>
-    );
-  }
+  return (
+    <View style={AppStyles.ContainerStyle}>
+      <TextInput
+        style={{width: '100%', height: 45}}
+        placeholder="Type here to translate!"
+        onChangeText={txt => setText(txt)}
+        value={text}
+      />
+      <Text>
+        You clicked {count} times | {text}{' '}
+      </Text>
+      <TouchableHighlight
+        style={AppStyles.ButtonsStyle}
+        onPress={() => {
+          addToItens();
+        }}>
+        <Text>Click Here</Text>
+      </TouchableHighlight>
+      <FlatList
+        style={AppStyles.FlatListStyle}
+        data={itens}
+        renderItem={({item}) => (
+          <View style={AppStyles.FlatListItemContainerStyle}>
+            <Text style={AppStyles.FlatListItemElementStyle}>{item.key}</Text>
+            <Button
+              title="X"
+              color="red"
+              onPress={() => {
+                onItemRemove(item);
+              }}
+            />
+          </View>
+        )}
+      />
+    </View>
+  );
 }
