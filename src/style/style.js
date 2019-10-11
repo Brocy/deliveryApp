@@ -5,8 +5,8 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
-    margin: 16,
-    paddingTop: 22,
+    marginLeft: 16,
+    marginRight: 16,
   },
   ButtonsStyle: {
     backgroundColor: '#2CC990',
